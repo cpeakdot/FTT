@@ -36,7 +36,6 @@ namespace FTT.Consumable
         {
             harvestable = false;
             growTimer = 0f;
-            growing = true;
             
             var visualScale = visual.transform.localScale;
             visualScale.y = .1f;
@@ -45,7 +44,8 @@ namespace FTT.Consumable
 
         public void Water()
         {
-            
+            growing = true;
+            Debug.Log("Watered " + "Growing: " + growing, this.gameObject);
         }
     }
 }

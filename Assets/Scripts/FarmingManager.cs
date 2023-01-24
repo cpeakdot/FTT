@@ -1,12 +1,13 @@
 ﻿using System;
 using FTT.Tile;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace FTT.Farm
 {
     public class FarmingManager : MonoBehaviour
     {
-        public enum SelectedObj {Dirt, Water}
+        public enum SelectedObj {Hand, Water, Hoe}
         public SelectedObj selectedObj;
 
         [SerializeField] private Consumable.Consumable[] consumables;
@@ -16,15 +17,36 @@ namespace FTT.Farm
         [SerializeField] private TileManager tileManager;
         [SerializeField] private GameObject seedSelection;
 
+        private Vector3 mouseDownPos;
+
+        public delegate void OnAction(SelectedObj sObj);
+
+        public OnAction OnActionChange;
+
         private void Start()
         {
-            selectedObj = SelectedObj.Dirt;
+            selectedObj = SelectedObj.Hand;
         }
 
         private void Update()
         {
+            TileSelection();
+        }
+
+        private void TileSelection()
+        {
+            if (selectedObj != SelectedObj.Hand)
+                return;
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
             if (Input.GetMouseButtonDown(0))
             {
+                mouseDownPos = Input.mousePosition;
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (mouseDownPos != Input.mousePosition)
+                    return;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hitInfo, 10f))
                 {
@@ -49,19 +71,32 @@ namespace FTT.Farm
                 }
             }
         }
-        
-        private void SelectObj(SelectedObj sObj)
+
+        public void HandPointer()
         {
-            selectedObj = sObj;
+            selectedObj = SelectedObj.Hand;
+            OnActionChange?.Invoke(SelectedObj.Hand);
+        }
+
+        public void WaterPointer()
+        {
+            selectedObj = SelectedObj.Water;
+            OnActionChange?.Invoke(SelectedObj.Water);
+        }
+
+        public void HoePointer()
+        {
+            selectedObj = SelectedObj.Hoe;
+            OnActionChange?.Invoke(SelectedObj.Hoe);
         }
 
         public void PlantSeed(Consumable.Consumable plant)
         {
-            selectedTile.PlantCrop();
             var seed = Array.IndexOf(consumables, plant);
             var seedPos = selectedTile.GetDirt().transform.position + new Vector3(.5f, 0, .5f);
             var consSeed = Instantiate(consumables[seed], seedPos, Quaternion.identity);
             consSeed.InitSeed();
+            selectedTile.PlantCrop(consSeed);
         }
     }
 }
