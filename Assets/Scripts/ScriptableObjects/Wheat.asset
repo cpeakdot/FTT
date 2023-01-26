@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: Wheat
   m_EditorClassIdentifier: 
   growTime: 30
+  id: wheat
+  icon: {fileID: 21300000, guid: 7eb97446845c4db479793ef397d5224b, type: 3}

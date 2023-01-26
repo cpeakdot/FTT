@@ -2,6 +2,7 @@
 using FTT.Farm;
 using FTT.Tile;
 using UnityEngine;
+using cpeak.cPool;
 
 namespace FTT.Actions
 {
@@ -10,9 +11,11 @@ namespace FTT.Actions
         [SerializeField] private FarmingManager farmingManager;
         [SerializeField] private TileManager tileManager;
         private bool wateringAction = false;
+        private cPool pool;
 
         private void Start()
         {
+            pool = cPool.instance;
             farmingManager.OnActionChange += (FarmingManager.SelectedObj selectedObj) =>
             {
                 wateringAction = selectedObj == FarmingManager.SelectedObj.Water;
@@ -23,7 +26,7 @@ namespace FTT.Actions
         {
             if (wateringAction)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButton(0))
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out RaycastHit hitInfo, 10f))
@@ -44,7 +47,7 @@ namespace FTT.Actions
                                     Debug.Log("crop is null!");
                                     return;
                                 }
-                                tile.GetCrop().Water();
+                                WaterCrop(tile);
                             }
                         }
                         else
@@ -54,6 +57,17 @@ namespace FTT.Actions
                     }
                 }
             }
+        }
+
+        private void WaterCrop(Tile.Tile tile)
+        {
+            var crop = tile.GetCrop();
+            
+            if (crop.IsGrowing || crop.IsHarvestable)
+                return;
+            
+            pool.GetPoolObject("waterSplash", crop.transform.position, Quaternion.identity, true, 2f);
+            crop.Water();
         }
     }
 }

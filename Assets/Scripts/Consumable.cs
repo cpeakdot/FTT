@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using cpeak.cPool;
+using UnityEngine;
 
 namespace FTT.Consumable
 {
@@ -10,10 +12,17 @@ namespace FTT.Consumable
         private float growTimer = 0f;
         private bool growing = false;
         private bool harvestable;
+        private Tile.Tile tile;
+        private cPool pool;
 
         private void Awake()
         {
             growTime = scriptableObject.growTime;
+        }
+
+        private void Start()
+        {
+            pool = cPool.instance;
         }
 
         private void Update()
@@ -46,6 +55,25 @@ namespace FTT.Consumable
         {
             growing = true;
             Debug.Log("Watered " + "Growing: " + growing, this.gameObject);
+        }
+
+        public void Harvest()
+        {
+            if (!harvestable || tile == null)
+                return;
+            
+            tile.HarvestCrop();
+            this.tile = null;
+            pool.ReleaseObject(scriptableObject.id, this.gameObject);
+        }
+
+        public bool IsGrowing => growing;
+        public bool IsHarvestable => harvestable;
+        public ConsumableSO GetScriptableObject => scriptableObject;
+
+        public void SetTile(Tile.Tile targetTile)
+        {
+            tile = targetTile;
         }
     }
 }

@@ -6,5 +6,7 @@ namespace FTT.Consumable
     public class ConsumableSO : ScriptableObject
     {
         public float growTime;
+        public string id;
+        public Sprite icon;
     }
 }

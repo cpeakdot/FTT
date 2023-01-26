@@ -7,7 +7,7 @@ namespace FTT.Farm
 {
     public class FarmingManager : MonoBehaviour
     {
-        public enum SelectedObj {Hand, Water, Hoe}
+        public enum SelectedObj {Hand, Seed, Water, Hoe}
         public SelectedObj selectedObj;
 
         [SerializeField] private Consumable.Consumable[] consumables;
@@ -18,6 +18,8 @@ namespace FTT.Farm
         [SerializeField] private GameObject seedSelection;
 
         private Vector3 mouseDownPos;
+
+        private Consumable.Consumable currentCrop;
 
         public delegate void OnAction(SelectedObj sObj);
 
@@ -57,7 +59,7 @@ namespace FTT.Farm
                         if (!tile.HasCropOn())
                         {
                             selectedTile = tile;
-                            seedSelection.SetActive(true);
+                            //seedSelection.SetActive(true);
                         }
                         else
                         {
@@ -78,6 +80,12 @@ namespace FTT.Farm
             OnActionChange?.Invoke(SelectedObj.Hand);
         }
 
+        public void SeedPointer()
+        {
+            selectedObj = SelectedObj.Seed;
+            OnActionChange?.Invoke(SelectedObj.Seed);
+        }
+
         public void WaterPointer()
         {
             selectedObj = SelectedObj.Water;
@@ -92,11 +100,16 @@ namespace FTT.Farm
 
         public void PlantSeed(Consumable.Consumable plant)
         {
-            var seed = Array.IndexOf(consumables, plant);
-            var seedPos = selectedTile.GetDirt().transform.position + new Vector3(.5f, 0, .5f);
-            var consSeed = Instantiate(consumables[seed], seedPos, Quaternion.identity);
-            consSeed.InitSeed();
-            selectedTile.PlantCrop(consSeed);
+            currentCrop = plant;
+            // var seed = Array.IndexOf(consumables, plant);
+            // var seedPos = selectedTile.GetDirt().transform.position + new Vector3(.5f, 0, .5f);
+            // var consSeed = Instantiate(consumables[seed], seedPos, Quaternion.identity);
+            // consSeed.InitSeed();
+            // consSeed.SetTile(selectedTile);
+            // selectedTile.PlantCrop(consSeed);
         }
+
+        public Consumable.Consumable GetPlant => currentCrop;
+        public Consumable.Consumable[] GetConsumables => consumables;
     }
 }
