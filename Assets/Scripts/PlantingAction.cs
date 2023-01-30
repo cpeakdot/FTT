@@ -1,5 +1,6 @@
 ﻿using System;
 using FTT.Farm;
+using FTT.Managers;
 using FTT.Tile;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace FTT.Actions
     {
         [SerializeField] private FarmingManager farmingManager;
         [SerializeField] private TileManager tileManager;
+        [SerializeField] private InventoryManager inventoryManager;
 
         private bool planting = false;
         
@@ -36,6 +38,10 @@ namespace FTT.Actions
                             if (!tile.HasCropOn())
                             {
                                 var consumable = farmingManager.GetPlant;
+                                
+                                if(consumable == null)
+                                    return;
+                                
                                 PlantCrop(tile, consumable);
                                 //seedSelection.SetActive(true);
                             }
@@ -56,6 +62,17 @@ namespace FTT.Actions
         private void PlantCrop(Tile.Tile targetTile, Consumable.Consumable targetConsumable)
         {
             var consumables = farmingManager.GetConsumables;
+            
+            if (targetTile.HasCropOn())
+            {
+                return;
+            }
+            
+            if (!inventoryManager.TryRemoveElement(targetConsumable))
+            {
+                return;
+            }
+            
             var seed = Array.IndexOf(consumables, targetConsumable);
             var seedPos = targetTile.GetDirt().transform.position + new Vector3(.5f, 0, .5f);
             var consSeed = Instantiate(consumables[seed], seedPos, Quaternion.identity);

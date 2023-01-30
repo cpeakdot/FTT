@@ -12,6 +12,7 @@ namespace FTT.Actions
         [SerializeField] private FarmingManager farmingManager;
         [SerializeField] private TileManager tileManager;
         [SerializeField] private InventoryManager inventoryManager;
+        private const int harvestSeedAmount = 2;
         private bool harvesting = false;
         private cPool pool;
 
@@ -66,7 +67,7 @@ namespace FTT.Actions
             var crop = tile.GetCrop();
             if (crop == null || !crop.IsHarvestable)
                 return;
-            inventoryManager.AddConsumable(crop);
+            inventoryManager.AddConsumable(crop, harvestSeedAmount);
             pool.GetPoolObject("harvestingEffect", crop.transform.position, Quaternion.identity, true, 3f);
             crop.Harvest();
         }

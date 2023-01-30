@@ -1,5 +1,4 @@
-﻿using System;
-using FTT.Tile;
+﻿using FTT.Tile;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,6 +6,7 @@ namespace FTT.Farm
 {
     public class FarmingManager : MonoBehaviour
     {
+        public static FarmingManager Instance;
         public enum SelectedObj {Hand, Seed, Water, Hoe}
         public SelectedObj selectedObj;
 
@@ -24,6 +24,18 @@ namespace FTT.Farm
         public delegate void OnAction(SelectedObj sObj);
 
         public OnAction OnActionChange;
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
+        }
 
         private void Start()
         {
@@ -78,6 +90,7 @@ namespace FTT.Farm
         {
             selectedObj = SelectedObj.Hand;
             OnActionChange?.Invoke(SelectedObj.Hand);
+            CloseSeedSelection();
         }
 
         public void SeedPointer()
@@ -90,26 +103,28 @@ namespace FTT.Farm
         {
             selectedObj = SelectedObj.Water;
             OnActionChange?.Invoke(SelectedObj.Water);
+            CloseSeedSelection();
         }
 
         public void HoePointer()
         {
             selectedObj = SelectedObj.Hoe;
             OnActionChange?.Invoke(SelectedObj.Hoe);
+            CloseSeedSelection();
         }
 
-        public void PlantSeed(Consumable.Consumable plant)
+        private void CloseSeedSelection()
         {
-            currentCrop = plant;
-            // var seed = Array.IndexOf(consumables, plant);
-            // var seedPos = selectedTile.GetDirt().transform.position + new Vector3(.5f, 0, .5f);
-            // var consSeed = Instantiate(consumables[seed], seedPos, Quaternion.identity);
-            // consSeed.InitSeed();
-            // consSeed.SetTile(selectedTile);
-            // selectedTile.PlantCrop(consSeed);
+            seedSelection.SetActive(false);
         }
 
         public Consumable.Consumable GetPlant => currentCrop;
+
+        public void SetPlant(Consumable.Consumable plant)
+        {
+            CloseSeedSelection();
+            currentCrop = plant;
+        }
         public Consumable.Consumable[] GetConsumables => consumables;
     }
 }

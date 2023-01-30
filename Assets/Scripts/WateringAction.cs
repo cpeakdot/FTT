@@ -1,5 +1,4 @@
-﻿using System;
-using FTT.Farm;
+﻿using FTT.Farm;
 using FTT.Tile;
 using UnityEngine;
 using cpeak.cPool;

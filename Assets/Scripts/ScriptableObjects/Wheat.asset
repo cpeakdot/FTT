@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8198a0c894b44d8cbf88076f4165c96c, type: 3}
   m_Name: Wheat
   m_EditorClassIdentifier: 
+  plant: {fileID: 179971942614435583, guid: 4caba6df6faa9ef468b48b336ee0d3ef, type: 3}
   growTime: 30
   id: wheat
-  icon: {fileID: 21300000, guid: 7eb97446845c4db479793ef397d5224b, type: 3}
+  icon: {fileID: 21300000, guid: c4eef5ba3359df84aa1bdba2d180011b, type: 3}

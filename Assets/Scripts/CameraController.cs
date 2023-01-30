@@ -29,7 +29,7 @@ namespace FTT.Controllers
                         {
                             float deltaX = touch.position.x - touchStart.x;
                             float deltaY = touch.position.y - touchStart.y;
-                            transform.Translate(new Vector3(-deltaX * sensitivity * Time.deltaTime, -deltaY * sensitivity * Time.deltaTime, 0));
+                            transform.Translate(new Vector3(-deltaX * sensitivity * Time.deltaTime, 0, -deltaY * sensitivity * Time.deltaTime));
                             /// Clamp the x and y value
                             var myPosition = transform.position;
                             float xValue = myPosition.x;
