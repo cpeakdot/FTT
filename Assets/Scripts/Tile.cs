@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace FTT.Tile
 {
+    [System.Serializable]
     public class Tile
     {
         private Dirt tile;
@@ -53,5 +54,10 @@ namespace FTT.Tile
                 return null;
             }
         }
+
+        //public override string ToString()
+        //{
+        //    return "hasCrop: " + hasCrop + " , crop: " + GetCrop();
+        //}
     }
 }
