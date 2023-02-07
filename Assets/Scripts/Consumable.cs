@@ -1,5 +1,6 @@
 ﻿using System;
 using cpeak.cPool;
+using FTT.Managers;
 using UnityEngine;
 
 namespace FTT.Consumable
@@ -23,6 +24,7 @@ namespace FTT.Consumable
         private void Start()
         {
             pool = cPool.instance;
+            GameStatus.OnGameClosed += GameStatus_OnGameClosed;
         }
 
         private void Update()
@@ -41,10 +43,11 @@ namespace FTT.Consumable
             }
         }
 
-        public void InitSeed()
+        public void InitSeed(bool watered = false, float timer = 0f)
         {
             harvestable = false;
-            growTimer = 0f;
+            growTimer = timer;
+            growing = watered;
             
             var visualScale = visual.transform.localScale;
             visualScale.y = .1f;
@@ -74,6 +77,31 @@ namespace FTT.Consumable
         public void SetTile(Tile.Tile targetTile)
         {
             tile = targetTile;
+        }
+
+        private void GameStatus_OnGameClosed(object sender , EventArgs e)
+        {
+            Save();
+        }
+
+        private void Save()
+        {
+            var consumableIndex = GetConsumableIndex(this);
+            if(this.tile != null)
+            {
+                this.tile.SaveTile(consumableIndex , growTimer);
+            }
+        }
+        
+        private int GetConsumableIndex(Consumable consumable)
+        {
+            return ConsumableManager.GetConsumableIndex(this.scriptableObject);
+        }
+
+        [ContextMenu("Test")]
+        private void Testing()
+        {
+            Debug.Log("tile: " + this.tile + " worldPos: " + tile.GetWorldPosition() + " crop: " + this.tile.GetCrop(), tile.GetDirt().gameObject);
         }
     }
 }

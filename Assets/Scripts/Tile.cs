@@ -10,11 +10,16 @@ namespace FTT.Tile
         private bool hasDirtOn;
         private bool hasCrop;
         private Consumable.Consumable consumable;
-        public Tile(Dirt tile, bool hasDirtOn, bool hasCrop)
+        private int xPosition;
+        private int zPosition;
+        private float timer;
+        public Tile(Dirt tile, bool hasDirtOn, bool hasCrop, int xPosition, int zPosition)
         {
             this.tile = tile;
             this.hasDirtOn = hasDirtOn;
             this.hasCrop = hasCrop;
+            this.xPosition = xPosition;
+            this.zPosition = zPosition;
         }
 
         public bool HasDirt()
@@ -30,6 +35,7 @@ namespace FTT.Tile
         public void HarvestCrop()
         {
             this.hasCrop = false;
+            PlayerPrefs.SetInt("tile" + xPosition + zPosition , 0);
         }
 
         public bool HasCropOn()
@@ -40,6 +46,13 @@ namespace FTT.Tile
         public void PlantCrop(Consumable.Consumable consumable)
         {
             this.hasCrop = true;
+            PlayerPrefs.SetInt("tile" + xPosition + zPosition , 1);
+            this.consumable = consumable;
+        }
+
+        public void SetCrop(Consumable.Consumable consumable)
+        {
+            Debug.Log("x : " + xPosition + " z: " + zPosition + " set Crop : " + consumable);
             this.consumable = consumable;
         }
 
@@ -55,9 +68,26 @@ namespace FTT.Tile
             }
         }
 
-        //public override string ToString()
-        //{
-        //    return "hasCrop: " + hasCrop + " , crop: " + GetCrop();
-        //}
+        public Vector3 GetWorldPosition()
+        {
+            return new Vector3(xPosition , 0 , zPosition);
+        }
+
+        public void SaveTile(int consumableIndex, float timer)
+        {
+            this.timer = timer;
+            PlayerPrefs.SetInt("xPosition" + xPosition + "zPosition" + zPosition , consumableIndex);
+            PlayerPrefs.SetFloat(xPosition + zPosition + "timer" , timer);
+        }
+
+        public float GetTimer()
+        {
+            return PlayerPrefs.GetFloat(xPosition + zPosition + "timer" , 0f);
+        }
+
+        public int GetConsumableIndex()
+        {
+            return PlayerPrefs.GetInt("xPosition" + xPosition + "zPosition" + zPosition , -1);
+        }
     }
 }

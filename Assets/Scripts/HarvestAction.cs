@@ -1,5 +1,6 @@
 ﻿using System;
 using cpeak.cPool;
+using FTT.Consumable;
 using FTT.Farm;
 using FTT.Managers;
 using FTT.Tile;
@@ -7,11 +8,12 @@ using UnityEngine;
 
 namespace FTT.Actions
 {
-    public class HarvestAction : MonoBehaviour
+    public class HarvestAction : FarmAction
     {
         [SerializeField] private FarmingManager farmingManager;
         [SerializeField] private TileManager tileManager;
         [SerializeField] private InventoryManager inventoryManager;
+        [SerializeField] private int experience;
         private const int harvestSeedAmount = 2;
         private bool harvesting = false;
         private cPool pool;
@@ -32,7 +34,7 @@ namespace FTT.Actions
                 if (Input.GetMouseButton(0))
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(ray, out RaycastHit hitInfo, 10f))
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDistance))
                     {
                         if (hitInfo.transform.TryGetComponent(out Dirt dirt))
                         {
@@ -47,6 +49,7 @@ namespace FTT.Actions
                                 var crop = tile.GetCrop();
                                 if (crop == null)
                                 {
+                                    Debug.Log("tile: " + tile.GetWorldPosition() + " hasCrop : " + tile.HasCropOn(), tile.GetDirt().gameObject);
                                     Debug.Log("crop is null!");
                                     return;
                                 }
@@ -67,10 +70,16 @@ namespace FTT.Actions
             var crop = tile.GetCrop();
             if (crop == null || !crop.IsHarvestable)
                 return;
-            inventoryManager.AddConsumable(crop, harvestSeedAmount);
+            inventoryManager.AddConsumable(crop, crop.transform.position, harvestSeedAmount);
             pool.GetPoolObject("harvestingEffect", crop.transform.position, Quaternion.identity, true, 3f);
             crop.Harvest();
+            IncreaseExperience(crop.GetScriptableObject);
         }
 
+        public override void IncreaseExperience(ConsumableSO consumable = null)
+        {
+            var exp = consumable == null ? experience : consumable.experience;
+            levelManager.AddExperience(exp);
+        }
     }
 }

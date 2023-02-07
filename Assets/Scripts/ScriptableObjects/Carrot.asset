@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: Carrot
   m_EditorClassIdentifier: 
   plant: {fileID: 179971942614435583, guid: 76b1d58902d33db42a7dc622f23fbf6b, type: 3}
-  growTime: 10
+  growTime: 150
   id: Carrot
   icon: {fileID: 21300000, guid: 328c3db486b4f9e41959e85a7ff8bb0d, type: 3}
+  marketPrice: 25
+  marketMissionOrderMaxAmount: 6
+  sellPrice: 7
+  experience: 2
+  ingredients: []

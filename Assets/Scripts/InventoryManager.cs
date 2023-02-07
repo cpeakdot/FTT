@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using FTT.Controllers;
 using UnityEngine;
+using Internal = UnityEngine.Internal;
 
 namespace FTT.Managers
 {
-    public class InventoryManager : MonoBehaviour
+    public partial class InventoryManager : MonoBehaviour
     {
         public static InventoryManager Instance;
+        [SerializeField] private ParticleManager particleManager;
         private List<Inventory> InventoryItems = new();
         [SerializeField] private Transform inventory;
         [SerializeField] private InventoryItem inventoryItemPrefab;
@@ -24,21 +26,52 @@ namespace FTT.Managers
             {
                 Destroy(this);
             }
+
+            var allConsumables = ConsumableManager.GetAllSOs();
+            GetSave(allConsumables);
+        }
+
+        private void GetSave(Consumable.ConsumableSO[] allConsumables)
+        {
+            for (int i = 0; i < allConsumables.Length; i++)
+            {
+                var plantAmount = GetKey(allConsumables[i].plant);
+                if (plantAmount != 0)
+                {
+                    GetAndAddConsumable(allConsumables[i].plant , plantAmount);
+                }
+            }
         }
 
         [ContextMenu("Add Wheat")]
         public void AddWheat()
         {
-            AddConsumable(testWheat);
+            AddConsumable(testWheat, Vector3.zero);
             ListItems();
         }
 
-        public void AddConsumable(Consumable.Consumable consumable, int amount = 1)
+        public void AddConsumable(Consumable.Consumable consumable,[Internal.DefaultValue("Vector3.zero")] Vector3 position, int amount = 1)
         {
             var newElement = FindInventoryElement(consumable);
             if (newElement == null)
             {
                 newElement = new Inventory(consumable, amount);
+                InventoryItems.Add(newElement);
+            }
+            else
+            {
+                newElement.count += amount;
+            }
+            SaveItem(newElement.consumable , newElement.count);
+            particleManager.InitParticle(ParticleManager.ParticleType.Consumable , position , Quaternion.identity, consumable.GetScriptableObject, amount);
+        }
+
+        private void GetAndAddConsumable(Consumable.Consumable consumable, int amount = 1)
+        {
+            var newElement = FindInventoryElement(consumable);
+            if (newElement == null)
+            {
+                newElement = new Inventory(consumable , amount);
                 InventoryItems.Add(newElement);
             }
             else
@@ -58,10 +91,12 @@ namespace FTT.Managers
             if (element.count > 1)
             {
                 element.count -= 1;
+                ReAdjustItemCount(element.consumable , element.count);
             }
             else
             {
                 InventoryItems.Remove(element);
+                DeleteKey(element.consumable);
             }
             
         }
@@ -107,5 +142,16 @@ namespace FTT.Managers
                 items.Add(newItem.transform);
             }
         }
+
+        public bool HasItem(Consumable.Consumable consumable, int amount)
+        {
+            var cons = FindInventoryElement(consumable);
+            if(cons != null)
+            {
+                return cons.count >= amount;
+            }
+            return false;
+        }
+
     }
 }

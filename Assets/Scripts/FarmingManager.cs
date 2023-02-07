@@ -1,10 +1,11 @@
-﻿using FTT.Tile;
+﻿using FTT.Consumable;
+using FTT.Tile;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace FTT.Farm
 {
-    public class FarmingManager : MonoBehaviour
+    public class FarmingManager : FarmAction
     {
         public static FarmingManager Instance;
         public enum SelectedObj {Hand, Seed, Water, Hoe}
@@ -40,6 +41,7 @@ namespace FTT.Farm
         private void Start()
         {
             selectedObj = SelectedObj.Hand;
+            OnActionChange?.Invoke(selectedObj);
         }
 
         private void Update()
@@ -62,7 +64,7 @@ namespace FTT.Farm
                 if (mouseDownPos != Input.mousePosition)
                     return;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, 10f))
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDistance))
                 {
                     Debug.Log(hitInfo.transform.name, hitInfo.transform.gameObject);
                     if (hitInfo.transform.TryGetComponent(out Dirt dirt))
@@ -125,6 +127,11 @@ namespace FTT.Farm
             CloseSeedSelection();
             currentCrop = plant;
         }
+
+        public override void IncreaseExperience(ConsumableSO consumable = null)
+        {
+        }
+
         public Consumable.Consumable[] GetConsumables => consumables;
     }
 }

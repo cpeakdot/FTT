@@ -16,3 +16,7 @@ MonoBehaviour:
   growTime: 30
   id: wheat
   icon: {fileID: 21300000, guid: c4eef5ba3359df84aa1bdba2d180011b, type: 3}
+  marketPrice: 10
+  marketMissionOrderMaxAmount: 10
+  sellPrice: 3
+  ingredients: []

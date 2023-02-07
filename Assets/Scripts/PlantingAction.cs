@@ -1,4 +1,5 @@
 ﻿using System;
+using FTT.Consumable;
 using FTT.Farm;
 using FTT.Managers;
 using FTT.Tile;
@@ -6,11 +7,12 @@ using UnityEngine;
 
 namespace FTT.Actions
 {
-    public class PlantingAction : MonoBehaviour
+    public class PlantingAction : FarmAction
     {
         [SerializeField] private FarmingManager farmingManager;
         [SerializeField] private TileManager tileManager;
         [SerializeField] private InventoryManager inventoryManager;
+        [SerializeField] private int experienceAmount = 1;
 
         private bool planting = false;
         
@@ -29,7 +31,7 @@ namespace FTT.Actions
                 if (Input.GetMouseButton(0))
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(ray, out RaycastHit hitInfo, 10f))
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDistance))
                     {
                         Debug.Log(hitInfo.transform.name, hitInfo.transform.gameObject);
                         if (hitInfo.transform.TryGetComponent(out Dirt dirt))
@@ -59,26 +61,35 @@ namespace FTT.Actions
             }
         }
 
-        private void PlantCrop(Tile.Tile targetTile, Consumable.Consumable targetConsumable)
+        public void PlantCrop(Tile.Tile targetTile , Consumable.Consumable targetConsumable , bool watered = false, float timer = 0f, bool overdrive = false)
         {
+            print(targetTile + " " + targetConsumable + " " + watered + " " + timer);
             var consumables = farmingManager.GetConsumables;
             
-            if (targetTile.HasCropOn())
+            if (targetTile.HasCropOn() && !overdrive)
             {
                 return;
             }
             
-            if (!inventoryManager.TryRemoveElement(targetConsumable))
+            if (!inventoryManager.TryRemoveElement(targetConsumable) && !overdrive)
             {
+                farmingManager.HandPointer();
                 return;
             }
             
             var seed = Array.IndexOf(consumables, targetConsumable);
             var seedPos = targetTile.GetDirt().transform.position + new Vector3(.5f, 0, .5f);
             var consSeed = Instantiate(consumables[seed], seedPos, Quaternion.identity);
-            consSeed.InitSeed();
+            consSeed.InitSeed(watered, timer);
             consSeed.SetTile(targetTile);
             targetTile.PlantCrop(consSeed);
+            IncreaseExperience();
+        }
+
+        public override void IncreaseExperience(ConsumableSO consumable = null)
+        {
+            var exp = consumable == null ? experienceAmount : consumable.experience;
+            levelManager.AddExperience(exp);
         }
     }
 }
