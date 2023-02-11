@@ -52,7 +52,6 @@ namespace FTT.Tile
 
         public void SetCrop(Consumable.Consumable consumable)
         {
-            Debug.Log("x : " + xPosition + " z: " + zPosition + " set Crop : " + consumable);
             this.consumable = consumable;
         }
 

@@ -15,6 +15,7 @@ public class MissionManager : MonoBehaviour
     [SerializeField] private GameObject missionsCanvas;
     [SerializeField] private GameObject GameCanvas;
     [SerializeField] private GameObject ShopCanvas;
+    [SerializeField] private GameObject rewardCanvas;
 
     private void Start()
     {
@@ -62,5 +63,6 @@ public class MissionManager : MonoBehaviour
         missionsCanvas.SetActive(true);
         GameCanvas.SetActive(false);
         ShopCanvas.SetActive(false);
+        rewardCanvas.SetActive(false);
     }
 }

@@ -2,12 +2,13 @@ using FTT.Actions;
 using FTT.Farm;
 using FTT.Managers;
 using UnityEngine;
-using FTT.Consumable;
 
 namespace FTT.Tile
 {
     public class TileManager : MonoBehaviour
     {
+        public static TileManager Instance { get; private set; }
+
         [SerializeField] private PlantingAction plantingAction;
 
         [SerializeField] private int width;
@@ -16,18 +17,30 @@ namespace FTT.Tile
         [SerializeField] private Tile[,] tiles;
         [SerializeField] private Tile[,] tempTileArray;
 
+        [SerializeField] private int[] totalDirtPerLevel;
+        [SerializeField] private Vector2[] areaPerLevel;
+        private int level;
+
         private int totalDirt = 4;
         
         private void Awake()
         {
-            InitTiles();
+            if(Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
         }
 
-        private void InitTiles()
+        public void InitTiles(int level = 1)
         {
-            totalDirt = PlayerPrefs.GetInt("totalDirtCount", 4);
-            width = PlayerPrefs.GetInt("newWidth" , 2);
-            height = PlayerPrefs.GetInt("newHeight" , 2);
+            totalDirt = totalDirtPerLevel[level - 1];
+            width = (int)areaPerLevel[level - 1].x;
+            height = (int)areaPerLevel[level - 1].y;
+            this.level = level;
             CreateTiles();
         }
 
@@ -40,7 +53,7 @@ namespace FTT.Tile
         {
             if(!onRunTime)
             {
-                tiles = new Tile[height , width];
+                tiles = new Tile[width , height];
             }
             var counter = 0;
             for (int i = 0; i < width; i++)
@@ -48,6 +61,7 @@ namespace FTT.Tile
                 for (int j = 0; j < height; j++)
                 {
                     counter++;
+                    print("createTiles: " + i + " " + j);
                     if(tiles[i,j] == null)
                     {
                         var dirtObj = Instantiate(dirtObject, new Vector3(i, 0, j), Quaternion.identity);
@@ -73,7 +87,6 @@ namespace FTT.Tile
                             }
                             else
                             {
-                                Debug.Log("pos: " + i + " " + j + " - " + crop , this.gameObject);
                                 tiles[i , j].HarvestCrop();
                             }
                         }
@@ -95,10 +108,6 @@ namespace FTT.Tile
         private void ReadjustTiles(int count, int newWidth, int newHeight)
         {
             this.totalDirt = count;
-
-            PlayerPrefs.SetInt("totalDirtCount", totalDirt);
-            PlayerPrefs.SetInt("newWidth" , newWidth);
-            PlayerPrefs.SetInt("newHeight" , newHeight);
 
             width = newWidth;
             height = newHeight;
@@ -122,6 +131,7 @@ namespace FTT.Tile
             {
                 for (int j = 0; j < height; j++)
                 {
+                    print("width: " + i + " height: " + j);
                     if (tempTileArray[i, j].HasCropOn())
                     {
                         plantArray[i , j] = tempTileArray[i , j].GetCrop();
@@ -130,7 +140,7 @@ namespace FTT.Tile
                 }
             }
 
-            tiles = new Tile[newHeight, newWidth];
+            tiles = new Tile[newWidth, newHeight];
 
             for (int i = 0; i < width; i++)
             {
@@ -154,6 +164,14 @@ namespace FTT.Tile
             height = newHeight;
             width = newWidth;
             ReadjustTiles(count, newWidth, newHeight);
+        }
+
+        public void LevelUpDirtExpansion(int level)
+        {
+            var totalDirt1 = totalDirtPerLevel[level - 1];
+            var width1 = (int)areaPerLevel[level - 1].x;
+            var height1 = (int)areaPerLevel[level - 1].y;
+            SetTiles(totalDirt1 , width1 , height1);
         }
 
         public Dirt GetDirt(Vector3 position)

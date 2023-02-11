@@ -10,7 +10,7 @@ namespace FTT
         protected int maxRaycastDistance = 100;
         public abstract void IncreaseExperience(ConsumableSO consumable = null);
 
-        public void Awake()
+        protected virtual void Awake()
         {
             levelManager = LevelManager.Instance;
         }

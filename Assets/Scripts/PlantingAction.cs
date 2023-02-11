@@ -33,7 +33,6 @@ namespace FTT.Actions
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDistance))
                     {
-                        Debug.Log(hitInfo.transform.name, hitInfo.transform.gameObject);
                         if (hitInfo.transform.TryGetComponent(out Dirt dirt))
                         {
                             var tile = tileManager.GetTile(dirt);
@@ -49,12 +48,12 @@ namespace FTT.Actions
                             }
                             else
                             {
-                                Debug.Log("Has Crop On", tile.GetDirt().gameObject);
+                                /// Has crop on
                             }
                         }
                         else
                         {
-                            Debug.Log("Is not dirt!");
+                            /// Its not dirt
                         }
                     }
                 }
@@ -83,7 +82,11 @@ namespace FTT.Actions
             consSeed.InitSeed(watered, timer);
             consSeed.SetTile(targetTile);
             targetTile.PlantCrop(consSeed);
-            IncreaseExperience();
+
+            if(!overdrive)
+            {
+                IncreaseExperience();
+            }
         }
 
         public override void IncreaseExperience(ConsumableSO consumable = null)

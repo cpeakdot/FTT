@@ -43,7 +43,7 @@ namespace FTT.Actions
                             var tile = tileManager.GetTile(dirt);
                             if (tile == null)
                             {
-                                Debug.Log("Tile is null!");
+                                /// Tile is null
                                 return;
                             }
                             if (tile.HasCropOn())
@@ -51,7 +51,7 @@ namespace FTT.Actions
                                 var crop = tile.GetCrop();
                                 if (crop == null)
                                 {
-                                    Debug.Log("crop is null!");
+                                    /// Crop is null
                                     return;
                                 }
                                 WaterCrop(tile);
@@ -59,7 +59,7 @@ namespace FTT.Actions
                         }
                         else
                         {
-                            Debug.Log("Is not dirt!");
+                            /// Its not dirt
                         }
                     }
                 }

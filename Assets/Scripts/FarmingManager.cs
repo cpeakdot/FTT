@@ -26,8 +26,9 @@ namespace FTT.Farm
 
         public OnAction OnActionChange;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             if (Instance == null)
             {
                 Instance = this;
@@ -66,7 +67,6 @@ namespace FTT.Farm
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDistance))
                 {
-                    Debug.Log(hitInfo.transform.name, hitInfo.transform.gameObject);
                     if (hitInfo.transform.TryGetComponent(out Dirt dirt))
                     {
                         var tile = tileManager.GetTile(dirt);
@@ -77,12 +77,12 @@ namespace FTT.Farm
                         }
                         else
                         {
-                            Debug.Log("Has Crop On", tile.GetDirt().gameObject);
+                            /// Has crop on
                         }
                     }
                     else
                     {
-                        Debug.Log("Is not dirt!");
+                        /// Its not dirt
                     }
                 }
             }

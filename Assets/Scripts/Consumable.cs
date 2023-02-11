@@ -16,6 +16,8 @@ namespace FTT.Consumable
         private Tile.Tile tile;
         private cPool pool;
 
+        private GameObject waterIcon;
+
         private void Awake()
         {
             growTime = scriptableObject.growTime;
@@ -23,7 +25,6 @@ namespace FTT.Consumable
 
         private void Start()
         {
-            pool = cPool.instance;
             GameStatus.OnGameClosed += GameStatus_OnGameClosed;
         }
 
@@ -49,6 +50,11 @@ namespace FTT.Consumable
             growTimer = timer;
             growing = watered;
             
+            if(!growing)
+            {
+                ActivateWaterIcon();
+            }
+            
             var visualScale = visual.transform.localScale;
             visualScale.y = .1f;
             visual.transform.localScale = visualScale;
@@ -57,7 +63,7 @@ namespace FTT.Consumable
         public void Water()
         {
             growing = true;
-            Debug.Log("Watered " + "Growing: " + growing, this.gameObject);
+            DeactivateWaterIcon();
         }
 
         public void Harvest()
@@ -102,6 +108,27 @@ namespace FTT.Consumable
         private void Testing()
         {
             Debug.Log("tile: " + this.tile + " worldPos: " + tile.GetWorldPosition() + " crop: " + this.tile.GetCrop(), tile.GetDirt().gameObject);
+        }
+
+        private void ActivateWaterIcon()
+        {
+            if(waterIcon == null)
+            {
+                var yDifference = Vector3.up;
+                waterIcon = cPool.instance.GetPoolObject("WaterIcon", this.transform.position + yDifference, Quaternion.identity);
+                if(waterIcon.TryGetComponent(out WaveMovement wave))
+                {
+                    wave.SetStartPosition(this.transform.position + yDifference);
+                }
+            }
+        }
+
+        private void DeactivateWaterIcon()
+        {
+            if(waterIcon != null)
+            {
+                cPool.instance.ReleaseObject("WaterIcon", waterIcon.gameObject);
+            }
         }
     }
 }

@@ -49,8 +49,7 @@ namespace FTT.Actions
                                 var crop = tile.GetCrop();
                                 if (crop == null)
                                 {
-                                    Debug.Log("tile: " + tile.GetWorldPosition() + " hasCrop : " + tile.HasCropOn(), tile.GetDirt().gameObject);
-                                    Debug.Log("crop is null!");
+                                    /// Crop is null
                                     return;
                                 }
                                 HarvestCrop(tile);
@@ -58,7 +57,7 @@ namespace FTT.Actions
                         }
                         else
                         {
-                            Debug.Log("Is not dirt!");
+                            /// Its not dirt
                         }
                     }
                 }

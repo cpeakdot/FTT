@@ -9,6 +9,7 @@ namespace FTT.Managers
         [SerializeField] private GameObject shopCanvas;
         [SerializeField] private GameObject gameCanvas;
         [SerializeField] private GameObject missionsCanvas;
+        [SerializeField] private GameObject rewardCanvas;
         [SerializeField] private GameManager gameManager;
         [SerializeField] private InventoryManager inventoryManager;
 
@@ -30,6 +31,7 @@ namespace FTT.Managers
             shopCanvas.SetActive(true);
             gameCanvas.SetActive(false);
             missionsCanvas.SetActive(false);
+            rewardCanvas.SetActive(false);
         }
 
         public void BuyItem(ConsumableSO consumableSO, int amount = 1)
