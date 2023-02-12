@@ -1,5 +1,7 @@
 ﻿using FTT.Farm;
 using UnityEngine;
+using FTT.EventSystem;
+using System;
 
 namespace FTT.Controllers
 {
@@ -11,9 +13,18 @@ namespace FTT.Controllers
         [SerializeField] private float minXValue, maxXValue;
         [SerializeField] private float minYValue, maxYValue;
         [SerializeField] private FarmingManager farmingManager;
+        
+        private bool uiActive = false;
+
+        private void Start() 
+        {
+            EventManager.OnUIToggle += UIEvent;
+        }
 
         void LateUpdate() 
         {
+            if(uiActive)
+                return;
             if (farmingManager != null)
             {
                 if (farmingManager.selectedObj == FarmingManager.SelectedObj.Hand)
@@ -45,6 +56,11 @@ namespace FTT.Controllers
                     }
                 }
             }
+        }
+
+        private void UIEvent(object sender, EventManager.OnUIToggleEventArgs e)
+        {
+            uiActive = e.isUIOn;
         }
     }
 }

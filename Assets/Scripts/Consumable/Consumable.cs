@@ -73,7 +73,14 @@ namespace FTT.Consumable
             
             tile.HarvestCrop();
             this.tile = null;
-            pool.ReleaseObject(scriptableObject.id, this.gameObject);
+            if(pool == null)
+            {
+                Debug.Log("Pool is null");
+            }
+            else
+            {
+                pool.ReleaseObject(scriptableObject.id, this.gameObject);
+            }
         }
 
         public bool IsGrowing => growing;

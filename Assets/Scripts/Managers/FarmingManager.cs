@@ -54,8 +54,6 @@ namespace FTT.Farm
         {
             if (selectedObj != SelectedObj.Hand)
                 return;
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
             if (Input.GetMouseButtonDown(0))
             {
                 mouseDownPos = Input.mousePosition;

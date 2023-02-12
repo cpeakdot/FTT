@@ -12,14 +12,14 @@ namespace FTT
 
         public enum BuildingType
         {
-            Oven,
+            Bakery,
             Popcorn,
         }
 
         [ContextMenu("Test")]
         public void Test()
         {
-            ActivateBuildingCanvas(BuildingType.Oven);
+            ActivateBuildingCanvas(BuildingType.Bakery);
         }
 
         [SerializeField] private BuildingTypeRecipes[] buildingTypeRecipesArray;
