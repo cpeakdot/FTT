@@ -11,7 +11,7 @@ namespace FTT.Controllers
         private Vector2 touchStart;
         private const float cameraZPosition = -10f;
         [SerializeField] private float minXValue, maxXValue;
-        [SerializeField] private float minYValue, maxYValue;
+        [SerializeField] private float minZValue, maxZValue;
         [SerializeField] private FarmingManager farmingManager;
         
         private bool uiActive = false;
@@ -44,12 +44,12 @@ namespace FTT.Controllers
                             /// Clamp the x and y value
                             var myPosition = transform.position;
                             float xValue = myPosition.x;
-                            float yValue = myPosition.y;
+                            float zValue = myPosition.z;
                             if(minXValue != 0 || maxXValue != 0)
                                 xValue = Mathf.Clamp(myPosition.x, minXValue, maxXValue);
-                            if(minYValue != 0 || maxYValue != 0)
-                                yValue = Mathf.Clamp(myPosition.y, minYValue, maxYValue);
-                            transform.position = new Vector3(xValue, yValue, myPosition.z);
+                            if(minZValue != 0 || maxZValue != 0)
+                                zValue = Mathf.Clamp(myPosition.z, minZValue, maxZValue);
+                            transform.position = new Vector3(xValue, myPosition.y, zValue);
                     
                             touchStart = touch.position;
                         }

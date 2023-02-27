@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8198a0c894b44d8cbf88076f4165c96c, type: 3}
+  m_Name: SugarCane
+  m_EditorClassIdentifier: 
+  plant: {fileID: 4764301126747564729, guid: e87371aba1e32e040928ca63ded98438, type: 3}
+  growTime: 600
+  id: Sugar Cane
+  icon: {fileID: 21300000, guid: 86a8eb94046b30344810424685dbb378, type: 3}
+  marketPrice: 20
+  marketMissionOrderMaxAmount: 6
+  sellPrice: 7
+  experience: 3
+  ingredients: []

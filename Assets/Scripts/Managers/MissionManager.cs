@@ -17,6 +17,11 @@ public class MissionManager : MonoBehaviour
     [SerializeField] private GameObject ShopCanvas;
     [SerializeField] private GameObject rewardCanvas;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
     private void Start()
     {
         StartCoroutine(MissionSpawnRoutine());

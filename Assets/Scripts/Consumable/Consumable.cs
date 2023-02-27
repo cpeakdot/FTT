@@ -26,6 +26,7 @@ namespace FTT.Consumable
         private void Start()
         {
             GameStatus.OnGameClosed += GameStatus_OnGameClosed;
+            pool = cPool.instance;
         }
 
         private void Update()

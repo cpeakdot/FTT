@@ -9,6 +9,8 @@ public class RecipeItemUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI recipeText;
     [SerializeField] private ConsumableSO consumableSO;
 
+    public ConsumableSO GetConsumableSO => consumableSO;
+
     public void InitRecipeItem(Sprite icon, string recipeText, ConsumableSO consumableSO)
     {
         this.icon.sprite = icon;

@@ -24,6 +24,7 @@ namespace FTT.Managers
 
         private void InitReward(object sender, LevelEventArgs e)
         {
+            ClearRewardCanvas();
             if(rewardsPerLevel[e.level - 2].rewards.Length > 0)
             {
                 for (int i = 0; i < rewardsPerLevel[e.level - 2].rewards.Length; i++)
@@ -80,6 +81,23 @@ namespace FTT.Managers
             shopCanvas.SetActive(false);
             missionsCanvas.SetActive(false);
             rewardCanvas.SetActive(false);
+        }
+
+        private void ClearRewardCanvas()
+        {
+            for (int i = 0; i < rewardParentTransform.childCount; i++)
+            {
+                var childObj = rewardParentTransform.GetChild(i);
+
+                if(childObj != null && rewardParentTransform.GetChild(i).TryGetComponent(out RectTransform tr))
+                {
+                    Destroy(tr.gameObject);
+                }
+                else
+                {
+                    Debug.LogError("Child Object or RectTransform is null on Reward Parent" , this);
+                }
+            }
         }
     }
 

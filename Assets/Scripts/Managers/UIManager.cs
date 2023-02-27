@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace FTT.Managers
 {
@@ -13,6 +14,10 @@ namespace FTT.Managers
 
         private void Start()
         {
+            if(gameManager == null)
+            {
+                gameManager = GameManager.Instance;
+            }
             gameManager.OnGoldAdjusted += (amount) =>
             {
                 var formattedMoney = MoneyFormatter.ToKMB(amount);
@@ -21,6 +26,12 @@ namespace FTT.Managers
                     goldTextArray[i].text = formattedMoney;
                 }
             };
+        }
+
+        // Button action
+        public void OpenRanchScene()
+        {
+            SceneManager.LoadScene(1);
         }
     }
 }

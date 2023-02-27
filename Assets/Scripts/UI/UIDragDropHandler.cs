@@ -12,6 +12,7 @@ namespace FTT
         private RectTransform rectTransform;
         private Vector3 initialPosition;
         private bool canBeMoved = false;
+        private RecipeItemUI recipeItemUI;
 
         private void Awake() 
         {
@@ -22,7 +23,17 @@ namespace FTT
 
         private void Start() 
         {
+            if(GameObject.FindGameObjectWithTag("MainCanvas").TryGetComponent(out Canvas canvas))
+            {
+                this.canvas = canvas;
+            }
+
             initialPosition = rectTransform.anchoredPosition;    
+            recipeItemUI = GetComponentInParent<RecipeItemUI>();
+            if(recipeItemUI == null)
+            {
+                Debug.LogWarning("Recipe Item UI is null");
+            }
         }
 
         public void CanMove(Canvas canvas)
@@ -33,7 +44,8 @@ namespace FTT
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            
+            Debug.Log("Pointer down");
+            initialPosition = rectTransform.anchoredPosition;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
